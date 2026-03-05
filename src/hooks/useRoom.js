@@ -8,6 +8,7 @@ export default function useRoom() {
     await setDoc(doc(db, 'rooms', code), {
       createdAt: serverTimestamp(),
       payers: [],
+      categories: [],
     })
     return code
   }

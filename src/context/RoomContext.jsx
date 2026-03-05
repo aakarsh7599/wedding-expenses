@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react'
 import useExpenses from '../hooks/useExpenses'
 import usePayers from '../hooks/usePayers'
+import useCategories from '../hooks/useCategories'
 
 const RoomContext = createContext(null)
 
@@ -19,6 +20,7 @@ export function RoomProvider({ children }) {
 
   const { expenses, loading, addExpense, removeExpense } = useExpenses(roomCode)
   const { payers, addPayer } = usePayers(roomCode)
+  const { categories, addCategory } = useCategories(roomCode)
 
   function leaveRoom() {
     setRoomCode('')
@@ -35,6 +37,8 @@ export function RoomProvider({ children }) {
         removeExpense,
         payers,
         addPayer,
+        categories,
+        addCategory,
         leaveRoom,
       }}
     >

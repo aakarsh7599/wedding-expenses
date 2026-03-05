@@ -1,17 +1,19 @@
 import { useState } from 'react'
 import { motion, useMotionValue, useTransform, useAnimation } from 'framer-motion'
 import { Trash2 } from 'lucide-react'
-import categories from '../../config/categories'
+import { getIconComponent } from '../../config/categories'
+import { useRoomContext } from '../../context/RoomContext'
 import formatCurrency from '../../utils/formatCurrency'
 
 export default function ExpenseItem({ expense, onDelete }) {
+  const { categories } = useRoomContext()
   const x = useMotionValue(0)
   const controls = useAnimation()
   const bgOpacity = useTransform(x, [-100, -50, 0], [1, 0.5, 0])
   const [dragging, setDragging] = useState(false)
 
   const cat = categories.find((c) => c.name === expense.category)
-  const Icon = cat?.icon
+  const Icon = cat ? getIconComponent(cat.icon) : null
 
   function handleDragEnd() {
     setDragging(false)

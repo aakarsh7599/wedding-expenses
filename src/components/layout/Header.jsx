@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { LogOut } from 'lucide-react'
 import { useRoomContext } from '../../context/RoomContext'
 import RoomCodeDisplay from '../room/RoomCodeDisplay'
+import ExportMenu from '../ui/ExportMenu'
 import formatCurrency from '../../utils/formatCurrency'
 
 export default function Header() {
@@ -20,6 +21,7 @@ export default function Header() {
         </h1>
         <div className="flex items-center gap-2">
           <RoomCodeDisplay />
+          <ExportMenu />
           <button
             onClick={leaveRoom}
             className="p-1.5 text-rose-gold-light hover:text-rose-gold-dark active:scale-95 transition"

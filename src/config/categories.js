@@ -1,13 +1,19 @@
-import { Heart, Shirt, Crown, Gift, Sparkles, Sun, Star } from 'lucide-react'
+import {
+  Heart, Shirt, Crown, Gift, Sparkles, Sun, Star,
+  Tag, Music, Camera, Utensils, Car, Home, Flower2,
+  Gem, PartyPopper, Cake, Wine, Plane, MapPin,
+} from 'lucide-react'
 
-const categories = [
-  { name: 'Engagement', color: '#f43f5e', icon: Heart },
-  { name: 'Family Clothing', color: '#b76e79', icon: Shirt },
-  { name: 'Bride Clothing', color: '#ec4899', icon: Crown },
-  { name: 'Misc Wedding Expenses', color: '#f97316', icon: Gift },
-  { name: 'Wedding Day', color: '#eab308', icon: Sparkles },
-  { name: 'Haldi & Mehandi', color: '#facc15', icon: Sun },
-  { name: 'Pellikuturu', color: '#d4a0a7', icon: Star },
-]
+const iconMap = {
+  Heart, Shirt, Crown, Gift, Sparkles, Sun, Star,
+  Tag, Music, Camera, Utensils, Car, Home, Flower2,
+  Gem, PartyPopper, Cake, Wine, Plane, MapPin,
+}
 
-export default categories
+export const ICON_OPTIONS = Object.entries(iconMap).map(
+  ([key, component]) => ({ key, component })
+)
+
+export function getIconComponent(key) {
+  return iconMap[key] || Tag
+}

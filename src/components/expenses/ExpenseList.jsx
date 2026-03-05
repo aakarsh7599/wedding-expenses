@@ -3,11 +3,10 @@ import { useRoomContext } from '../../context/RoomContext'
 import ExpenseGroup from './ExpenseGroup'
 import EmptyState from '../ui/EmptyState'
 import ConfirmDialog from '../ui/ConfirmDialog'
-import categories from '../../config/categories'
 import { getPayerColor } from '../../utils/colorPalette'
 
 export default function ExpenseList() {
-  const { expenses, removeExpense, payers } = useRoomContext()
+  const { expenses, removeExpense, payers, categories } = useRoomContext()
   const [groupBy, setGroupBy] = useState('category')
   const [deleteTarget, setDeleteTarget] = useState(null)
 
@@ -29,7 +28,7 @@ export default function ExpenseList() {
       const idx = payers.indexOf(key)
       return getPayerColor(idx >= 0 ? idx : 0)
     },
-    [groupBy, payers]
+    [groupBy, payers, categories]
   )
 
   async function handleConfirmDelete() {

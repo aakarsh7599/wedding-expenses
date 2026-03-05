@@ -1,10 +1,10 @@
 import { useMemo } from 'react'
 import { useRoomContext } from '../../context/RoomContext'
-import categories from '../../config/categories'
+import { getIconComponent } from '../../config/categories'
 import formatCurrency from '../../utils/formatCurrency'
 
 export default function QuickStats() {
-  const { expenses } = useRoomContext()
+  const { expenses, categories } = useRoomContext()
 
   const stats = useMemo(() => {
     const map = {}
@@ -19,7 +19,7 @@ export default function QuickStats() {
         amount: map[c.name] || 0,
       }))
       .filter((s) => s.amount > 0)
-  }, [expenses])
+  }, [expenses, categories])
 
   if (stats.length === 0) return null
 
@@ -30,7 +30,7 @@ export default function QuickStats() {
       </h3>
       <div className="flex gap-2.5 overflow-x-auto scrollbar-hide pb-1">
         {stats.map((s) => {
-          const Icon = s.icon
+          const Icon = getIconComponent(s.icon)
           return (
             <div
               key={s.name}

@@ -1,16 +1,21 @@
 import { useState } from 'react'
 import { Plus } from 'lucide-react'
-import categories from '../../config/categories'
+import { getIconComponent, ICON_OPTIONS } from '../../config/categories'
+import { CATEGORY_COLORS } from '../../config/categoryColors'
 import { useRoomContext } from '../../context/RoomContext'
 
 export default function AddExpenseForm({ onSuccess }) {
-  const { addExpense, payers, addPayer } = useRoomContext()
+  const { addExpense, payers, addPayer, categories, addCategory } = useRoomContext()
   const [category, setCategory] = useState('')
   const [name, setName] = useState('')
   const [amount, setAmount] = useState('')
   const [paidBy, setPaidBy] = useState('')
   const [newPayer, setNewPayer] = useState('')
   const [showNewPayer, setShowNewPayer] = useState(false)
+  const [showNewCategory, setShowNewCategory] = useState(false)
+  const [newCatName, setNewCatName] = useState('')
+  const [newCatColor, setNewCatColor] = useState(CATEGORY_COLORS[0])
+  const [newCatIcon, setNewCatIcon] = useState('Tag')
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
 
@@ -51,6 +56,20 @@ export default function AddExpenseForm({ onSuccess }) {
     setShowNewPayer(false)
   }
 
+  async function handleAddCategory() {
+    if (!newCatName.trim()) return
+    try {
+      await addCategory({ name: newCatName.trim(), color: newCatColor, icon: newCatIcon })
+      setCategory(newCatName.trim())
+      setNewCatName('')
+      setNewCatColor(CATEGORY_COLORS[0])
+      setNewCatIcon('Tag')
+      setShowNewCategory(false)
+    } catch (err) {
+      setError(err.message)
+    }
+  }
+
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       {/* Category */}
@@ -60,7 +79,7 @@ export default function AddExpenseForm({ onSuccess }) {
         </label>
         <div className="grid grid-cols-2 gap-2">
           {categories.map((cat) => {
-            const Icon = cat.icon
+            const Icon = getIconComponent(cat.icon)
             const selected = category === cat.name
             return (
               <button
@@ -79,6 +98,83 @@ export default function AddExpenseForm({ onSuccess }) {
               </button>
             )
           })}
+
+          {showNewCategory ? (
+            <div className="col-span-2 space-y-3 bg-cream-dark rounded-xl p-3">
+              <input
+                type="text"
+                value={newCatName}
+                onChange={(e) => setNewCatName(e.target.value)}
+                placeholder="Category name"
+                autoFocus
+                className="w-full bg-white rounded-xl px-3 py-2 text-sm text-rose-gold-dark placeholder:text-rose-gold-light/50 focus:outline-none focus:ring-2 focus:ring-rose-gold/30"
+              />
+              <div>
+                <label className="text-[10px] text-rose-gold-light uppercase tracking-wider mb-1 block">
+                  Color
+                </label>
+                <div className="flex flex-wrap gap-1.5">
+                  {CATEGORY_COLORS.map((c) => (
+                    <button
+                      key={c}
+                      type="button"
+                      onClick={() => setNewCatColor(c)}
+                      className={`w-7 h-7 rounded-full transition-all ${
+                        newCatColor === c ? 'ring-2 ring-offset-2 ring-rose-gold scale-110' : ''
+                      }`}
+                      style={{ backgroundColor: c }}
+                    />
+                  ))}
+                </div>
+              </div>
+              <div>
+                <label className="text-[10px] text-rose-gold-light uppercase tracking-wider mb-1 block">
+                  Icon
+                </label>
+                <div className="flex flex-wrap gap-1.5">
+                  {ICON_OPTIONS.map(({ key, component: Ic }) => (
+                    <button
+                      key={key}
+                      type="button"
+                      onClick={() => setNewCatIcon(key)}
+                      className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${
+                        newCatIcon === key
+                          ? 'bg-rose-gold text-white scale-110'
+                          : 'bg-white text-rose-gold-dark'
+                      }`}
+                    >
+                      <Ic className="w-4 h-4" />
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setShowNewCategory(false)}
+                  className="flex-1 py-2 text-xs font-medium text-rose-gold-light rounded-xl bg-white active:scale-95 transition-transform"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={handleAddCategory}
+                  className="flex-1 py-2 text-xs font-medium text-white rounded-xl bg-rose-gold active:scale-95 transition-transform"
+                >
+                  Add
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setShowNewCategory(true)}
+              className="flex items-center justify-center gap-1 px-3 py-2.5 rounded-xl text-sm font-medium bg-cream-dark text-rose-gold border border-dashed border-rose-gold-light/40 active:scale-95 transition-transform"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              Add Category
+            </button>
+          )}
         </div>
       </div>
 

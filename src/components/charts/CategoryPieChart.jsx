@@ -1,7 +1,6 @@
 import { useState, useMemo, useCallback } from 'react'
 import { PieChart, Pie, Cell, Sector, ResponsiveContainer } from 'recharts'
 import { useRoomContext } from '../../context/RoomContext'
-import categories from '../../config/categories'
 import formatCurrency from '../../utils/formatCurrency'
 
 function renderActiveShape(props) {
@@ -42,7 +41,7 @@ function renderActiveShape(props) {
 }
 
 export default function CategoryPieChart() {
-  const { expenses } = useRoomContext()
+  const { expenses, categories } = useRoomContext()
   const [activeIndex, setActiveIndex] = useState(0)
 
   const data = useMemo(() => {
@@ -53,7 +52,7 @@ export default function CategoryPieChart() {
     return categories
       .filter((c) => map[c.name])
       .map((c) => ({ name: c.name, value: map[c.name], color: c.color }))
-  }, [expenses])
+  }, [expenses, categories])
 
   const onPieEnter = useCallback((_, index) => setActiveIndex(index), [])
 
